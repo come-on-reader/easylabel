@@ -32,3 +32,9 @@ mybatis-plus:
 #  type-aliases-package: com.zhifou.entity
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jwt:
+  typ: jwt
+  secret: reader_ubuntu
+  expiration: 3600 * 1000
+  algorithm: HS256
