@@ -30,6 +30,7 @@ public class ShiroConfig {
 
         // 配置系统受限资源
         Map<String, String> urlMap = new HashMap<>();
+        urlMap.put("/easylabelshiro/user/register", "anon");
         urlMap.put("/**", "jwt"); // 所有的请求通过自己的过滤器
         shiroFilterFactoryBean.setFilterChainDefinitionMap(urlMap);
 

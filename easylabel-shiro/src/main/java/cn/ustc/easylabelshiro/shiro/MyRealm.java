@@ -6,7 +6,11 @@ import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import cn.ustc.easylabelshiro.config.JwtConfig;
+import cn.ustc.easylabelshiro.entity.User;
 import cn.ustc.easylabelshiro.service.impl.UserServiceImpl;
+import cn.ustc.easylabelshiro.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
+import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -24,12 +28,8 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     private UserServiceImpl userService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
     /**
      * 限定这个realm只能处理jwtToken
-     * @param token
-     * @return
      */
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -38,43 +38,29 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 认证
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         // 1.获取token
         String token = (String) authenticationToken.getCredentials();
-        JWT jwt = JWTUtil.parseToken(token);
-        // 2.校验token：未校验通过或者已过期
-        // 2.1 校验token的signature，看内容是否被篡改
-        JWTValidator.of(token).validateAlgorithm(JWTSignerUtil.hs256(JwtConfig.ALGRITHM.getBytes()));
-        // 2.2 校验token的有效期
-        JWTValidator.of(token).validateDate(DateUtil.date());
-        // 2.3 校验token中的账户是否存在，秘钥是否正确
-        String userName = (String) jwt.getPayload("userName");
-        String jwtToken = (String) jwt.getPayload("jwtToken");
-
-        if (userName == null) {
-            throw new AuthenticationException("Username or password error");
+        // 2.获取jwt中关于用户名
+        String username = JwtUtil.getClaimsByToken(token).getSubject();
+        // 3.查询用户
+        User user = userService.getUser(username);
+        if (user == null) {
+            throw new ShiroException("用户不存在");
         }
-        // 拿着userName对应的token去redis中寻找
-        String redisToken = redisTemplate.opsForValue().get(userName);
-        // 对比redisToken和jwtToken
-        if (!jwtToken.isEmpty() && !jwtToken.equals(redisToken)) {
-            throw new AuthenticationException("Username or password error");
+        Claims claims = JwtUtil.getClaimsByToken(token);
+        if (JwtUtil.isTokenExpired(claims.getExpiration())) {
+            throw new ShiroException("token已过期，请重新登录");
         }
-        
-        return new SimpleAuthenticationInfo(token, token, "my_realm");
+        return new SimpleAuthenticationInfo(user, token, getName());
     }
 
 
 
     /**
      * 授权
-     * @param principalCollection
-     * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {

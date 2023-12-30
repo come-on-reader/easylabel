@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mybatis_plus?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/shirojwt?useSSL=false&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: "032022"
   data:
@@ -34,7 +34,7 @@ mybatis-plus:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt:
-  typ: jwt
+  typ: JWT
   secret: reader_ubuntu
-  expiration: 3600 * 1000
-  algorithm: HS256
+  expiration: 60
+  header: authorization

@@ -8,9 +8,9 @@ public class JwtConfig {
     @Value("${jwt.secret}")
     public static String SECRET;
     @Value("${jwt.expiration}")
-    public static String EXPIRATION;
-    @Value("${jwt.algorithm}")
-    public static String ALGRITHM;
+    public static long EXPIRE;
+    @Value("${jwt.header}")
+    public static String HEADER;
     @Value("${jwt.typ}")
     public static String TYPE;
 }

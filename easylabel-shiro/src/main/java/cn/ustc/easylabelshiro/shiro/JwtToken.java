@@ -1,5 +1,6 @@
 package cn.ustc.easylabelshiro.shiro;
 
+import cn.ustc.easylabelshiro.utils.JwtUtil;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
@@ -7,17 +8,27 @@ import org.apache.shiro.authc.AuthenticationToken;
  * jwtToken ： head+payload+signature
  */
 public class JwtToken implements AuthenticationToken {
+    private String username;
     private String token;
 
     public JwtToken(String token) {
         this.token = token;
+        this.username = JwtUtil.getClaimField(token, "username");
     }
 
+    /**
+     * 类似用户名
+     * @return
+     */
     @Override
     public Object getPrincipal() {
-        return token;
+        return username;
     }
 
+    /**
+     * 类似密码
+     * @return
+     */
     @Override
     public Object getCredentials() {
         return token;
