@@ -74,12 +74,12 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-<!--        shiro-->
+        <!-- shiro -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring-boot-starter</artifactId>
-            <version>1.13.0</version>
+            <artifactId>shiro-spring</artifactId>
             <classifier>jakarta</classifier>
+            <version>1.12.0</version>
             <!-- 排除仍使用了javax.servlet的依赖 -->
             <exclusions>
                 <exclusion>
@@ -97,13 +97,13 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <classifier>jakarta</classifier>
-            <version>1.13.0</version>
+            <version>1.12.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
             <classifier>jakarta</classifier>
-            <version>1.13.0</version>
+            <version>1.12.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.shiro</groupId>
@@ -111,24 +111,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--        jwt-->
+        <!-- jjwt依赖包 -->
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.11.2</version>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.11.2</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.2</version>
-            <scope>runtime</scope>
+            <artifactId>jjwt</artifactId>
+            <version>0.12.1</version>
         </dependency>
     </dependencies>
 
